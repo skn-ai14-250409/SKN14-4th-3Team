@@ -1,9 +1,24 @@
 services:
+  db: # 이 서비스 추가
+    image: mysql:8.0
+    container_name: mysql_db
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root_password'
+      MYSQL_DATABASE: 'skn4th_db'       # .env 파일과 일치
+      MYSQL_USER: 'db_user'             # .env 파일과 일치
+      MYSQL_PASSWORD: 'db_password'     # .env 파일과 일치
+    ports:
+      - "3306:3306"
   django:
     build: .
     container_name: django_app
     env_file:
       - .env
+    depends_on: # db 서비스에 의존하도록 설정
+      - db
 
   nginx:
     image: nginx:latest
@@ -19,3 +34,6 @@ services:
 networks:
   default:
     driver: bridge
+
+volumes: # 볼륨 정의 추가
+  mysql_data:
