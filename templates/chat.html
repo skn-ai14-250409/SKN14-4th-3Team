@@ -1,0 +1,50 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Voice Chatbot</title>
+</head>
+<body>
+  <h1>🎤 Voice Chatbot 🎤</h1>
+  <button id="recBtn">녹음 시작/종료</button>
+  <ul id="chatlog"></ul>
+  <audio id="audioPlayer" controls autoplay></audio>
+  <script src="{% static 'js/voicechat.js' %}"></script>
+  
+<script>
+let ws = new WebSocket("ws://" + window.location.host + "/ws/voicechat/");
+let chunks = [];
+let recorder, stream;
+
+ws.onmessage = function(event) {
+    const data = JSON.parse(event.data);
+    document.getElementById("chatlog").innerHTML += "<li><b>Q:</b> " + data.prompt + "</li>";
+    document.getElementById("chatlog").innerHTML += "<li><b>A:</b> " + data.response + "</li>";
+    document.getElementById("audioPlayer").src = "data:audio/mp3;base64," + data.audio_base64;
+};
+
+document.getElementById('recBtn').onclick = async function() {
+    if (!recorder) {
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        recorder = new MediaRecorder(stream);
+        recorder.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
+        recorder.onstop = () => {
+            let blob = new Blob(chunks, { type: 'audio/mp3' });
+            chunks = [];
+            blob.arrayBuffer().then(buffer => {
+                ws.send(buffer);
+            });
+        };
+        recorder.start();
+        this.textContent = '녹음 중지';
+    } else {
+        recorder.stop();
+        stream.getTracks().forEach(track => track.stop());
+        recorder = null;
+        this.textContent = '녹음 시작';
+    }
+};
+</script>
+</body>
+</html>

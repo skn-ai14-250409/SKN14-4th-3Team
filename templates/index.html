@@ -16,6 +16,26 @@
           <button class="btn btn-secondary w-100 mt-3" id="newChatBtn">
             새 대화 시작
           </button>
+          <button id="startMicBtn">🎤 음성 질문 시작</button>
+          <button id="stopMicBtn">⏹ 음성 질문 종료</button>
+          {% block script %}
+          <script src="{% static 'js/voicechat.js' %}"></script>
+
+          <script>
+          document.getElementById("startMicBtn").addEventListener("click", () => {
+              console.log("녹음 시작 버튼 클릭됨");
+              startRecording();
+          });
+
+          document.getElementById("stopMicBtn").addEventListener("click", () => {
+              console.log("녹음 종료 버튼 클릭됨");
+              stopRecording();
+          });
+          </script>
+          <script src="{% static 'js/index.js' %}"></script>
+          {% endblock script %}
+
+
         </div>
       </div>
 
@@ -43,6 +63,7 @@
                   id="messageInput"
                   placeholder="세탁기/건조기에 대해 궁금한 점을 물어보세요!"
                 />
+                
                 <button class="btn send-btn" type="submit">전송</button>
               </div>
             </form>
@@ -116,6 +137,9 @@
     </div>
   </div>
 </div>
+
 {% endblock content %} {% block script %}
+<script src="{% static 'js/test.js' %}"></script>
 <script src="{% static 'js/index.js' %}"></script>
+
 {% endblock script %}
