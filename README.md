@@ -52,7 +52,6 @@ Repository for SKN14-4th-3Team
 - 대화 히스토리 관리
 - 이미지 업로드
 - 매뉴얼 PDF 다운로드
-- 음성 인터페이스
 
 ## 2. 기능 요구사항
 
@@ -91,7 +90,7 @@ Repository for SKN14-4th-3Team
 ## 3. 데이터베이스 설계
 
 ### 3.1 주요 테이블
-<img width="50" height="39" alt="image" src="https://github.com/user-attachments/assets/ef367d0e-60f4-4044-b08a-f7e398a76c72" />
+<img width="250" height="200" alt="image" src="https://github.com/user-attachments/assets/ef367d0e-60f4-4044-b08a-f7e398a76c72" />
 
 ---
 
@@ -102,12 +101,12 @@ Repository for SKN14-4th-3Team
 - **chat_history**: 채팅 히스토리 
 
 ---
- <img width="53" height="73" alt="image" src="https://github.com/user-attachments/assets/31aaf209-7f1b-49ed-ab8b-874bc6436582" />
+ <img width="250" height="350" alt="image" src="https://github.com/user-attachments/assets/31aaf209-7f1b-49ed-ab8b-874bc6436582" />
 
 
 ---
 ## 4. 개발/협업 프로세스
-<img width="123" height="39" alt="image" src="https://github.com/user-attachments/assets/ec6f4dc8-0828-43ca-959b-5ceeda4874e3" />
+<img width="600" height="200" alt="image" src="https://github.com/user-attachments/assets/ec6f4dc8-0828-43ca-959b-5ceeda4874e3" />
 
 - **스크럼 방식**:
     - Notion+Github, Discord 기반 데일리 진행
@@ -127,21 +126,27 @@ Repository for SKN14-4th-3Team
 - **서버**: Linux (Ubuntu)
 - **컨테이너**: Docker + Docker Compose
 - **기술 스택**: OpenAI, Huggingface, MySQL, Pinecone, Langchain, django, Tavily, Gamma, Docker, Docker Compose
-<img width="75" height="38" alt="image" src="https://github.com/user-attachments/assets/3750fd6d-90bf-4d14-9bef-c12dc4b47398" />
+<img width="350" height="200" alt="image" src="https://github.com/user-attachments/assets/3750fd6d-90bf-4d14-9bef-c12dc4b47398" />
 
 ## 5. 화면 구성 
 
-<img width="78" height="53" alt="image" src="https://github.com/user-attachments/assets/35881bd7-b5da-43d7-b223-c6a4aca873a6" />
-<img width="75" height="52" alt="image" src="https://github.com/user-attachments/assets/e8a6f6e9-adb6-4783-aedb-957fba160f77" />
-<img width="79" height="56" alt="image" src="https://github.com/user-attachments/assets/7888185b-f766-46fe-8f40-78ddce698b2c" />
-<img width="186" height="91" alt="image" src="https://github.com/user-attachments/assets/a134bed9-90be-43ff-95e4-dd144560cb76" />
+<img width="400" height="250" alt="image" src="https://github.com/user-attachments/assets/35881bd7-b5da-43d7-b223-c6a4aca873a6" />
+<img width="350" height="250" alt="image" src="https://github.com/user-attachments/assets/e8a6f6e9-adb6-4783-aedb-957fba160f77" />
+<img width="400" height="250" alt="image" src="https://github.com/user-attachments/assets/7888185b-f766-46fe-8f40-78ddce698b2c" />
+<img width="1000" height="500" alt="image" src="https://github.com/user-attachments/assets/a134bed9-90be-43ff-95e4-dd144560cb76" />
 
 - 이미지 업로드 및 질문 입력, 대화 기록 저장 및 삭제, 사용자 이미지 기반 모델명 인식, 모델명 & 사용자 질문 기반 답변 생성 
+
+---
+## 6. 테스트 결과
+
+<img width="550" height="240" alt="image" src="https://github.com/user-attachments/assets/3cf7f495-ab6a-4602-b94c-f1ba23a1e9d9" />
+<img width="550" height="240" alt="image" src="https://github.com/user-attachments/assets/e58c227a-6ca2-4d8b-86f9-f706987f28d0" />
 
 
 ---
 
-## 6. 기대효과
+## 7. 기대효과
 
 - **고객지원**: 고객이 입력하는 질문에 대해 고장, 사용법, 청소방법 등 바로 안내
 - **고객센터/마케팅**: 24시간 자동응대 및 빠른 상담 처리를 통한 운영 비용 절감
@@ -150,18 +155,18 @@ Repository for SKN14-4th-3Team
 
 ---
 
-## 7. 한 줄 회고 
+## 8. 한 줄 회고 
 
-- **유용환**: 사용자 질문과 이미지를 결합해 실질적인 정보를 제공하는 RAG 시스템을 직접 구현해보고, 데이터 처리부터 LLM 응답 생성과정까지 좀 더 깊은 이해를 할 수 있었던 것 같습니다.
+- **유용환**: Pinecone 기반 Vector DB를 직접 구축하며, 데이터 전처리부터 임베딩·인덱싱·검색까지 RAG 파이프라인 전 과정을 실습해 구조와 동작 원리를 깊이 있게 이해할 수 있었던 것 같습니다.
 - **윤이서**: 웹 구조에 대한 이해를 확장하고 체계적인 데이터 수집 경험을 쌓을 수 있었으며, 짧은 시간 내 LLM/RAG 시스템을 함께 완성해낸 팀원들 덕분에 더욱 의미 있는 성장의 시간을 보낼 수 있었습니다.
 - **김준기**: 배운 내용을 프로젝트에 실제로 적용하는 과정을 통해 백터디비 구축과 실제 챗봇이 어떻게 구성되 있는지 그 과정을 잘 이해할 수 있었습니다.
 - **이수미**: RAG 서비스 처음 만들어보았는데, 팀원분들과 협력하고 구현하는 과정 중에 많은 배움과 이해를 얻어갈 수 있었습니다. 더욱 복합적인 웹 서비스로 발전시켜보고 싶습니다.
-- **김재우**: 난이도가 높은 팀플 과제 였지만 협력을 통해 문제점을 하나씩 고쳐가면서 완성하는 과정이 좋았고 스트림릿 UI를 더 복합적으로 만들 수 있게 되었다.
+- **김재우**: 회원가입/로그인 기능을 구현하기 위해 django , docker desktop을 활용해 보았고 웹페이지 ui를 디자인하면서 js,css,html 등을 활용하면서 웹페이지의 형태에 대해 좀 더 알아 갈 수 있었다.
 - **정유진**: 팀 단위로 LLM/RAG 실습 및 프로젝트 준비과정을 통해 유익한 경험을 할 수 있었습니다.
 
 ---
 
-## 8. 참고 자료 및 활용 코드
+## 9. 참고 자료 및 활용 코드
 
 - [프로젝트 노션] https://www.notion.so/shqkel/SKN14-4th-3-2429cb46e5e28053aa58ed039a751aa7?source=copy_link
 - [GitHub 저장소] https://github.com/skn-ai14-250409/SKN14-4th-3Team
