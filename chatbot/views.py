@@ -1,5 +1,7 @@
 import os
 import json
+import traceback
+
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
@@ -10,6 +12,7 @@ from django.shortcuts import get_object_or_404
 from .models import Conversation, Message, UploadedImage
 from .rag_engine import run_chatbot, search_vector_db_image
 
+
 @method_decorator(csrf_exempt, name="dispatch")
 class ChatBotView(View):
     def post(self, request):
@@ -18,12 +21,24 @@ class ChatBotView(View):
             query = body.get("query", "")
             history = body.get("history", [])
 
-            result = run_chatbot(query, history=history)
-            return JsonResponse({"response": result})
+            print(f"📝 받은 쿼리: {query}")
+
+            try:
+                result = run_chatbot(query, history=history)
+                return JsonResponse({"response": result})
+            except Exception as rag_error:
+                print(f"❌ RAG 엔진 오류: {rag_error}")
+                traceback.print_exc()
+                return JsonResponse({
+                    "response": f"죄송합니다. AI 검색 기능에 문제가 있습니다. (오류: {str(rag_error)[:200]})"
+                })
 
         except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
-
+            print(f"❌ 전체 오류: {str(e)}")
+            traceback.print_exc()
+            return JsonResponse({
+                "error": f"서버 오류: {str(e)}"
+            }, status=500)
 
 @method_decorator(csrf_exempt, name="dispatch")
 class ModelSearchView(View):
@@ -32,20 +47,76 @@ class ModelSearchView(View):
         if not image_file:
             return HttpResponseBadRequest("No image file uploaded.")
 
-        # 임시 저장
-        temp_path = f"/tmp/{image_file.name}"
-        with open(temp_path, "wb+") as f:
-            for chunk in image_file.chunks():
-                f.write(chunk)
+        print(f"🖼️ 이미지 업로드됨: {image_file.name} ({image_file.size} bytes)")
+
+        import tempfile
+        temp_dir = tempfile.gettempdir()
+        temp_path = os.path.join(temp_dir, f"upload_{image_file.name}")
+        
+        print(f"💾 임시 저장 경로: {temp_path}")
 
         try:
+            with open(temp_path, "wb+") as f:
+                for chunk in image_file.chunks():
+                    f.write(chunk)
+            
+            print(f"✅ 파일 저장 완료: {os.path.exists(temp_path)}")
+
+            print("🔍 이미지 검색 시작...")
+            from .rag_engine import search_vector_db_image
             model_code = search_vector_db_image(temp_path)
-            return JsonResponse({"model_code": model_code})
+            print(f"🔍 검색 결과: {model_code}")
+            
+            if model_code and model_code != -1:
+                model_parts = str(model_code).split('_')
+                
+                response_data = {
+                    "success": True,
+                    "model_code": model_code,
+                    "model_name": model_code,
+                    "model": str(model_code),
+                    "product_info": {
+                        "type": "세탁기" if "세탁기" in str(model_code) else "세탁건조기",
+                        "capacity": "21kg" if "21kg" in str(model_code) else "용량 확인 필요",
+                        "model": model_parts[2] if len(model_parts) > 2 else "모델명 확인 필요",
+                        "color": "이녹스" if "이녹스" in str(model_code) else "색상 확인 필요",
+                    },
+                    "message": "이미지에서 모델을 성공적으로 인식했습니다."
+                }
+            else:
+                response_data = {
+                    "success": False,
+                    "model_code": -1,
+                    "model_name": "인식 실패",
+                    "model": "모델 정보를 찾을 수 없습니다.",
+                    "product_info": {
+                        "type": "알 수 없음",
+                        "capacity": "알 수 없음", 
+                        "model": "알 수 없음",
+                        "color": "알 수 없음",
+                    },
+                    "message": "이미지에서 모델을 인식할 수 없습니다."
+                }
+            
+            print(f"📤 응답 데이터: {response_data}")
+            return JsonResponse(response_data)
         except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
+            print(f"❌ 이미지 검색 오류: {str(e)}")
+            traceback.print_exc()
+            
+            return JsonResponse({
+                "success": False,
+                "model_code": -1,
+                "model": "이미지 분석 중 오류가 발생했습니다.",
+                "error": str(e)[:200]
+            }, status=500)
         finally:
-            if os.path.exists(temp_path):
-                os.remove(temp_path)
+            try:
+                if os.path.exists(temp_path):
+                    os.remove(temp_path)
+                    print(f"🗑️ 임시 파일 삭제: {temp_path}")
+            except Exception as cleanup_error:
+                print(f"⚠️ 임시 파일 삭제 실패: {cleanup_error}")
 
 
 @method_decorator(csrf_exempt, name="dispatch")
