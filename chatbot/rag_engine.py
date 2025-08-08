@@ -49,10 +49,10 @@ def search_vector_db_image(img_path):
     img_base64 = image_to_base64(img_path)
 
     # 유사도 검색
-    model_nm = indexer.search_and_show(img_base64)
+    # model_nm = indexer.search_and_show(img_base64)
 
     # Clip classification
-    # model_nm, _ = predict_model(img_path)
+    model_nm, _ = predict_model(img_path)
 
 
     return model_nm

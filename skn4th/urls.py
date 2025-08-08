@@ -23,6 +23,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("chatbot.urls")),
     path("uauth/", include("uauth.urls")),
+    path("chatbot/", include("chatbot.urls")),
     path("", include("main.urls")),
     # 모든 미정의된 경로 → 메인 페이지
     re_path(r"^(?:.*)/?$", TemplateView.as_view(template_name="index.html")),
