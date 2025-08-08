@@ -17,3 +17,4 @@ Pillow
 torch
 transformers
 scikit-learn
+django-cors-headers
