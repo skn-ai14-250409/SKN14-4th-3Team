@@ -13,3 +13,4 @@ python-decouple
 whitenoise
 pinecone
 Pillow
+django-cors-headers
