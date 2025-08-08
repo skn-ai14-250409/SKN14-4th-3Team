@@ -473,8 +473,6 @@ function updateImageDisplay() {
       <div class="uploaded-image-container">
         <img src="${currentImage.src}" alt="업로드된 이미지" class="uploaded-image">
         <div class="product-info">
-          <h6>제품명: 분석 중...</h6>
-          <h6>모델명: 확인 중...</h6>
           <small class="text-muted">파일명: ${currentImage.name}</small>
         </div>
       </div>

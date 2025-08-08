@@ -1,9 +1,7 @@
-# clip_service.py
 from django.conf import settings
 import torch
 from PIL import Image
 import numpy as np
-import os
 
 from transformers import CLIPProcessor, CLIPModel
 from sklearn.metrics.pairwise import cosine_similarity
