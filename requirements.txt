@@ -13,3 +13,6 @@ python-decouple
 whitenoise
 pinecone
 Pillow
+torch
+transformers
+scikit-learn
