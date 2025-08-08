@@ -18,11 +18,11 @@ Repository for SKN14-4th-3Team
 | 이름   | 역할                                    |
 |--------|---------------------------------------|
 | 유용환 | HTML, CSS, Javascript 활용 프론트 웹페이지 구현, PINECONE VectorDB 구축, 연동    |
-| 윤이서 | HTML, CSS, Javascript 활용 프론트 웹페이지 구현, 제품 url 소스 링크 제공 (매뉴얼 다운로드/크롤링), Figma 화면 설계
-           AWS 클라우드에 인프라 구성, 프로젝트 문서 기록, 통합 테스트 진행 및 결과 보고서 작성     |
+| 윤이서 | HTML, CSS, Javascript 활용 프론트 웹페이지 구현, 제품 url 소스 링크 제공 (매뉴얼 다운로드/크롤링), Figma 화면 설계  |
+|        | AWS 클라우드에 인프라 구성, 프로젝트 문서 기록, 통합 테스트 진행 및 결과 보고서 작성     |
 | 김준기 | HTML, CSS, Javascript 활용 프론트 웹페이지 구현, django 파일 작성 및 Docker 작업, PINECONE 테스트 코드 리팩토링,
-           AWS 클라우드에 인프라 구성, 클라우드/온라인에 데이터 Migration 및 코드 배포 |
-| 이수미 | HTML, CSS, Javascript 활용 프론트 웹페이지 구현, PINECONE VectorDB 구축, 연동        |
+|        | AWS 클라우드에 인프라 구성, 클라우드/온라인에 데이터 Migration 및 코드 배포 |
+| 이수미 | HTML, CSS, Javascript 활용 프론트 웹페이지 구현, PINECONE VectorDB 구축, 연동 |
 | 김재우 | 웹페이지 구현, AWS 클라우드에 인프라 구성           |
 | 정유진 | PPT, README 문서화, 노션-프로젝트 기록           |
 
@@ -91,7 +91,7 @@ Repository for SKN14-4th-3Team
 ## 3. 데이터베이스 설계
 
 ### 3.1 주요 테이블
-<img width="506" height="390" alt="image" src="https://github.com/user-attachments/assets/ef367d0e-60f4-4044-b08a-f7e398a76c72" />
+<img width="50" height="39" alt="image" src="https://github.com/user-attachments/assets/ef367d0e-60f4-4044-b08a-f7e398a76c72" />
 
 ---
 
@@ -102,12 +102,12 @@ Repository for SKN14-4th-3Team
 - **chat_history**: 채팅 히스토리 
 
 ---
- <img width="531" height="738" alt="image" src="https://github.com/user-attachments/assets/31aaf209-7f1b-49ed-ab8b-874bc6436582" />
+ <img width="53" height="73" alt="image" src="https://github.com/user-attachments/assets/31aaf209-7f1b-49ed-ab8b-874bc6436582" />
 
 
 ---
 ## 4. 개발/협업 프로세스
-<img width="1235" height="395" alt="image" src="https://github.com/user-attachments/assets/ec6f4dc8-0828-43ca-959b-5ceeda4874e3" />
+<img width="123" height="39" alt="image" src="https://github.com/user-attachments/assets/ec6f4dc8-0828-43ca-959b-5ceeda4874e3" />
 
 - **스크럼 방식**:
     - Notion+Github, Discord 기반 데일리 진행
@@ -127,14 +127,14 @@ Repository for SKN14-4th-3Team
 - **서버**: Linux (Ubuntu)
 - **컨테이너**: Docker + Docker Compose
 - **기술 스택**: OpenAI, Huggingface, MySQL, Pinecone, Langchain, django, Tavily, Gamma, Docker, Docker Compose
-<img width="750" height="382" alt="image" src="https://github.com/user-attachments/assets/3750fd6d-90bf-4d14-9bef-c12dc4b47398" />
+<img width="75" height="38" alt="image" src="https://github.com/user-attachments/assets/3750fd6d-90bf-4d14-9bef-c12dc4b47398" />
 
 ## 5. 화면 구성 
 
-<img width="784" height="534" alt="image" src="https://github.com/user-attachments/assets/35881bd7-b5da-43d7-b223-c6a4aca873a6" />
-<img width="759" height="525" alt="image" src="https://github.com/user-attachments/assets/e8a6f6e9-adb6-4783-aedb-957fba160f77" />
-<img width="798" height="560" alt="image" src="https://github.com/user-attachments/assets/7888185b-f766-46fe-8f40-78ddce698b2c" />
-<img width="1862" height="910" alt="image" src="https://github.com/user-attachments/assets/a134bed9-90be-43ff-95e4-dd144560cb76" />
+<img width="78" height="53" alt="image" src="https://github.com/user-attachments/assets/35881bd7-b5da-43d7-b223-c6a4aca873a6" />
+<img width="75" height="52" alt="image" src="https://github.com/user-attachments/assets/e8a6f6e9-adb6-4783-aedb-957fba160f77" />
+<img width="79" height="56" alt="image" src="https://github.com/user-attachments/assets/7888185b-f766-46fe-8f40-78ddce698b2c" />
+<img width="186" height="91" alt="image" src="https://github.com/user-attachments/assets/a134bed9-90be-43ff-95e4-dd144560cb76" />
 
 - 이미지 업로드 및 질문 입력, 대화 기록 저장 및 삭제, 사용자 이미지 기반 모델명 인식, 모델명 & 사용자 질문 기반 답변 생성 
 
@@ -164,7 +164,7 @@ Repository for SKN14-4th-3Team
 ## 8. 참고 자료 및 활용 코드
 
 - [프로젝트 노션] https://www.notion.so/shqkel/SKN14-4th-3-2429cb46e5e28053aa58ed039a751aa7?source=copy_link
-- [GitHub 저장소](https://github.com/skn-ai14-250409/SKN14-4th-3Team)
+- [GitHub 저장소] https://github.com/skn-ai14-250409/SKN14-4th-3Team
   
 ---
 
