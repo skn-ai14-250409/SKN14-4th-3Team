@@ -23,6 +23,8 @@ from . import views
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("chatbot.urls")),
+    path("uauth/", include("uauth.urls")),
+    path("chatbot/", include("chatbot.urls")),
     path("", include("main.urls")),
     path("chat/", include("chat.urls")),
     # 모든 미정의된 경로 → 메인 페이지

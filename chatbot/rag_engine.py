@@ -12,6 +12,7 @@ from langchain_core.documents import Document
 from .rag_indexer_class import IndexConfig, RAGIndexer
 from .utils import image_to_base64
 from concurrent.futures import ThreadPoolExecutor
+from .few_shots_clip import predict_model
 
 
 # pdfminer 경고 무시
@@ -27,11 +28,18 @@ TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
 def search_vector_db_image(img_path):
     """백터 디비에서 이미지의 모델을 가져온다"""
 
-    # 설정 생성
+    # 설정 생성 - Chroma
+    # config = IndexConfig(
+    #     persistent_directory="./chroma",
+    #     collection_name="imgs",
+    #     embedding_model="text-embedding-3-small",
+    # )
+
+    # 설정 생성 - Pinecone
     config = IndexConfig(
-        persistent_directory="./chroma",
-        collection_name="imgs",
+        index_name="image-index-0807",
         embedding_model="text-embedding-3-small",
+        dimension=1536,
     )
 
     # 인덱서 생성 및 실행
@@ -41,7 +49,12 @@ def search_vector_db_image(img_path):
     img_base64 = image_to_base64(img_path)
 
     # 유사도 검색
-    model_nm = indexer.search_and_show(img_base64)
+    # model_nm = indexer.search_and_show(img_base64)
+
+    # Clip classification
+    model_nm, _ = predict_model(img_path)
+
+
     return model_nm
 
 
@@ -67,12 +80,12 @@ def create_prompt_chain(llm):
                 4. 답변에서 다뤄야 할 세부 사항들
                 
                 JSON 형식으로 출력하세요:
-                {
+                {{
                     "keywords": ["키워드1", "키워드2", "키워드3"],
                     "main_topic": "주제",
                     "conditions": ["조건1"],
                     "details": ["세부사항1"]
-                }
+                }}
                 """,
             ),
             ("human", "질문: {query}"),
@@ -180,15 +193,25 @@ def enhanced_chain(query: str, retriever, llm, cot_prompt, history=[]):
 
 def run_chatbot(query, image_path=None, history=[]):
     EMBEDDINGS_MODEL = "text-embedding-3-small"
-    COLLECTION_NAME = "manuals"
-    VECTOR_DB_DIR = "./chroma"
+    # COLLECTION_NAME = "manuals"
+    # VECTOR_DB_DIR = "./chroma"
+    MANUAL_INDEX_NAME = "manual-index-0807" # pinecone
 
-    # 설정 생성
+    # 설정 생성 - Chroma
+    # config = IndexConfig(
+    #     persistent_directory=VECTOR_DB_DIR,
+    #     collection_name=COLLECTION_NAME,
+    #     embedding_model=EMBEDDINGS_MODEL,
+    # )
+
+    # 설정 생성 - Pinecone
     config = IndexConfig(
-        persistent_directory=VECTOR_DB_DIR,
-        collection_name=COLLECTION_NAME,
+        index_name=MANUAL_INDEX_NAME,
         embedding_model=EMBEDDINGS_MODEL,
+        dimension=1536,
     )
+
+
 
     # 인덱서 생성 및 실행
     indexer = RAGIndexer(config)
@@ -222,7 +245,6 @@ def run_chatbot(query, image_path=None, history=[]):
             
             예시 출력 :
             
-       
             - [체계적인 통합 설명을 한 문단 이상으로 기술]
 
             ### 추가 안내

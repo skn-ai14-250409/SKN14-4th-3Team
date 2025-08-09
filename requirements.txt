@@ -5,6 +5,7 @@ langchain_chroma==0.2.4
 langchain_openai==0.3.27
 langchain_community==0.3.27
 langchain_tavily==0.2.7
+langchain_pinecone
 pdfminer.six
 python-dotenv
 gunicorn
@@ -12,3 +13,7 @@ uvicorn
 python-decouple
 whitenoise
 pinecone
+Pillow
+torch
+transformers
+scikit-learn
