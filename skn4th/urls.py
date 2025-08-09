@@ -18,6 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include, re_path
 from django.views.generic import TemplateView
+from . import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -25,6 +26,10 @@ urlpatterns = [
     path("uauth/", include("uauth.urls")),
     path("chatbot/", include("chatbot.urls")),
     path("", include("main.urls")),
+    path("chat/", include("chat.urls")),
     # 모든 미정의된 경로 → 메인 페이지
-    re_path(r"^(?:.*)/?$", TemplateView.as_view(template_name="index.html")),
+    #re_path(r"^(?:.*)/?$", TemplateView.as_view(template_name="index.html")),
+    path('api/audio-chat/', views.audio_chat),
+    path('api/chat/', views.chat),
+    path('api/tts/', views.tts),
 ]

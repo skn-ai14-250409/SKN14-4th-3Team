@@ -1,3 +1,8 @@
+import dotenv from "dotenv";
+
+dotenv.config();
+
+
 // 전역 변수
 let conversations = {
   1: {
@@ -38,6 +43,10 @@ function getDOMElements() {
   totalMessages = document.getElementById("totalMessages");
   totalConversations = document.getElementById("totalConversations");
 }
+
+// 음성(STT) 및 TTS 관련 변수
+let mediaRecorder;
+let audioChunks = [];
 
 // 초기화
 document.addEventListener("DOMContentLoaded", function () {
@@ -201,6 +210,20 @@ function setupEventListeners() {
   }
 
   // 버튼 이벤트
+
+  newChatBtn.addEventListener("click", createNewConversation);
+  clearAllBtn.addEventListener("click", clearAllConversations);
+  deleteCurrBtn.addEventListener("click", deleteCurrentConversation);
+  downloadBtn.addEventListener("click", downloadChatHistory);
+  downloadCurrBtn.addEventListener("click", downloadChatCurrHistory);
+
+  // 마이크 버튼 연결 (HTML에 버튼 추가 필요)
+  const startMicBtn = document.getElementById("startMicBtn");
+  const stopMicBtn = document.getElementById("stopMicBtn");
+  if (startMicBtn && stopMicBtn) {
+    startMicBtn.addEventListener("click", startRecording);
+    stopMicBtn.addEventListener("click", stopRecording);
+
   if (newChatBtn) {
     newChatBtn.addEventListener("click", createNewConversation);
   }
@@ -223,6 +246,7 @@ function setupEventListeners() {
   }
   if (leftDownloadCurrBtn) {
     leftDownloadCurrBtn.addEventListener("click", downloadChatCurrHistory);
+
   }
 }
 
@@ -773,3 +797,68 @@ async function uploadImageAndGetModelCode(imageFile) {
   });
   return await response.json();
 }
+
+//let mediaRecorder;
+document.getElementById("startMicBtn").addEventListener("click", startRecording);
+document.getElementById("stopMicBtn").addEventListener("click", stopRecording);
+
+//let mediaRecorder;
+//let audioChunks = [];
+
+function startRecording() {
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+    mediaRecorder = new MediaRecorder(stream);
+    audioChunks = [];
+    mediaRecorder.start();
+    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+  });
+}
+
+async function stopRecording() {
+  if (!mediaRecorder) return;
+  mediaRecorder.stop();
+  mediaRecorder.onstop = async () => {
+    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+    const formData = new FormData();
+    formData.append('file', audioBlob, 'recording.webm');
+
+    // 1. STT: 서버에 음성 파일 전송 → 텍스트 반환
+    const sttRes = await fetch('/api/audio-chat/', {
+      method: 'POST',
+      body: formData
+    });
+    const sttData = await sttRes.json();
+    const recognizedText = sttData.text || '';
+
+    if (recognizedText) {
+      addMessage("user", recognizedText);
+
+      // 2. GPT: 기존 챗봇 질의와 동일하게 처리
+      const history = conversations[currentConversationId].messages
+        .filter((m) => m.role !== "system")
+        .map((m) => ({ role: m.role, content: m.content }));
+
+      showTypingIndicator();
+      const chatRes = await sendChatQuery(recognizedText, history);
+      hideTypingIndicator();
+      addMessage("assistant", chatRes.response || "응답을 불러오지 못했습니다.");
+
+      // 3. TTS: 챗봇 답변을 음성으로 출력
+      playTTS(chatRes.response);
+    }
+  };
+}
+
+async function playTTS(text) {
+  const ttsRes = await fetch('/api/tts/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text })
+  });
+  const ttsBlob = await ttsRes.blob();
+  const url = URL.createObjectURL(ttsBlob);
+  const audio = new Audio(url);
+  audio.play();
+}
+
+   

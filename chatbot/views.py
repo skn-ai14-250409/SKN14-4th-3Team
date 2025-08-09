@@ -1,10 +1,13 @@
 import os
 import json
 import traceback
-
-from django.http import JsonResponse, HttpResponseBadRequest
+import requests
+from django.http import JsonResponse, HttpResponseBadRequest, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from django.views import View
+from dotenv import load_dotenv 
+from django.conf import settings
 from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -12,6 +15,7 @@ from django.shortcuts import get_object_or_404
 from .models import Conversation, Message, UploadedImage
 from .rag_engine import run_chatbot, search_vector_db_image
 
+openai_api_key = settings.OPENAI_API_KEY
 
 @method_decorator(csrf_exempt, name="dispatch")
 class ChatBotView(View):
@@ -111,12 +115,59 @@ class ModelSearchView(View):
                 "error": str(e)[:200]
             }, status=500)
         finally:
-            try:
-                if os.path.exists(temp_path):
-                    os.remove(temp_path)
-                    print(f"🗑️ 임시 파일 삭제: {temp_path}")
-            except Exception as cleanup_error:
-                print(f"⚠️ 임시 파일 삭제 실패: {cleanup_error}")
+            if os.path.exists(temp_path):
+                os.remove(temp_path)
+
+
+class AudioChatView(View):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def post(self, request):
+        audio_file = request.FILES.get("file")
+        if not audio_file:
+            return HttpResponseBadRequest("No audio file uploaded.")
+
+        # OpenAI Whisper API 호출 
+        openai_api_key = "OPENAI_API_KEY"
+        stt_res = requests.post(
+            "https://api.openai.com/v1/audio/transcriptions",
+            headers={"Authorization": f"Bearer {openai_api_key}"},
+            files={"file": (audio_file.name, audio_file, audio_file.content_type)},
+            data={"model": "whisper-1"}
+        )
+        stt_data = stt_res.json()
+        recognized_text = stt_data.get("text", "")
+
+        return JsonResponse({"text": recognized_text})
+
+class TTSView(View):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def post(self, request):
+        body = json.loads(request.body)
+        text = body.get("text", "")
+        if not text:
+            return HttpResponseBadRequest("No text provided.")
+
+        # OpenAI TTS API 호출 
+        openai_api_key = "OPENAI_API_KEY"
+        tts_res = requests.post(
+            "https://api.openai.com/v1/audio/speech",
+            headers={
+                "Authorization": f"Bearer {openai_api_key}",
+                "Content-Type": "application/json"
+            },
+            json={
+                "model": "tts-1",
+                "input": text,
+                "voice": "nova"
+            }
+        )
+        return HttpResponse(tts_res.content, content_type="audio/wav")
 
 
 @method_decorator(csrf_exempt, name="dispatch")
